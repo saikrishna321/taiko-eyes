@@ -4,7 +4,7 @@
   "description": "Applitools Eyes SDK for Taiko.js",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest && codecov -F flagname unittests"
   },
   "keywords": [
     "applitools",
@@ -31,26 +31,31 @@
     "chalk": "^2.4.2",
     "rimraf": "^2.7.1"
   },
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
+  },
   "homepage": "https://github.com/saikrishna321/taiko-eyes#readme",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/core": "^7.3.4",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/preset-env": "^7.3.4",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^24.3.1",
+    "codecov": "^3.5.0",
     "eslint": "^6.0.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.0.0",
     "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-prettier": "^3.0.1",
     "husky": "^3.0.0",
     "jest": "^24.3.1",
     "jest-junit": "^6.3.0",
-    "prettier": "1.18.2",
-    "taiko": "1.0.0",
-    "eslint-config-prettier": "^6.0.0",
-    "eslint-plugin-prettier": "^3.0.1",
-    "pretty-quick": "^1.10.0",
     "lint-staged": "^9.0.0",
-    "eslint-config-airbnb": "^18.0.1"
+    "prettier": "1.18.2",
+    "pretty-quick": "^1.10.0",
+    "taiko": "1.0.0"
   },
   "lint-staged": {
     "**/*.{js}": [

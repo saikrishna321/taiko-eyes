@@ -17,5 +17,5 @@ steps:
 
 - script: |
     npm install
-    npm test
+    CODECOV_TOKEN=$(token) npm test
   displayName: 'npm install and test'

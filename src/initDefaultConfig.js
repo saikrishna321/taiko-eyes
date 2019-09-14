@@ -5,9 +5,9 @@ const { configParams: visualGridConfigParams } = require('@applitools/visual-gri
 const { TypeUtils } = require('@applitools/eyes-common');
 
 function initDefaultConfig(configPath = undefined) {
-  const testcafeConfigParams = ['tapDirPath', 'failTaikoOnDiff'];
+  const taikoConfigParams = ['tapDirPath', 'failTaikoOnDiff'];
   const calculatedConfig = ConfigUtils.getConfig({
-    configParams: [...visualGridConfigParams, ...testcafeConfigParams],
+    configParams: [...visualGridConfigParams, ...taikoConfigParams],
     configPath,
   });
   const defaultConfig = {
@@ -15,12 +15,6 @@ function initDefaultConfig(configPath = undefined) {
     concurrency: 1,
   };
   const configResult = { ...defaultConfig, ...calculatedConfig };
-  if (configResult.failTaikoOnDiff === '0') {
-    configResult.failTaikoOnDiff = false;
-  }
-  if (TypeUtils.isString(configResult.showLogs)) {
-    configResult.showLogs = configResult.showLogs === 'true' || configResult.showLogs === '1';
-  }
   return configResult;
 }
 
