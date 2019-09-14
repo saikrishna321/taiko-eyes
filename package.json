@@ -4,7 +4,7 @@
   "description": "Applitools Eyes SDK for Taiko.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [
     "applitools",
@@ -34,6 +34,7 @@
   "homepage": "https://github.com/saikrishna321/taiko-eyes#readme",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/core": "^7.3.4",
     "@babel/preset-env": "^7.3.4",
     "babel-eslint": "^10.0.1",
