@@ -4,7 +4,7 @@
   "description": "Applitools Eyes SDK for Taiko.js",
   "main": "index.js",
   "scripts": {
-    "test": "jest && codecov"
+    "test": "jest && codecov -F flagname unittests"
   },
   "keywords": [
     "applitools",
