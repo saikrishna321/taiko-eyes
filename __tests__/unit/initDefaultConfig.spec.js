@@ -1,6 +1,21 @@
 const path = require('path');
 const initDefaultConfig = require('../../src/initDefaultConfig');
 
+test('Init Config from file', async () => {
+  const configPath = path.resolve(__dirname, '../../testSeed/applitools.config.js');
+  process.env.APPLITOOLS_TAP_DIR_PATH = 'SOME PATH';
+  const config = initDefaultConfig(configPath);
+  expect(config).toEqual({
+    apiKey: 'taiko-appli',
+    concurrency: 1,
+    failTaikoOnDiff: true,
+    isDisabled: false,
+    showLogs: true,
+    someKey: 'someValue',
+    tapDirPath: 'SOME PATH',
+  });
+});
+
 test('Init Default Config', async () => {
   const configPath = path.resolve(__dirname, '../../testSeed/applitools.config.js');
   process.env.APPLITOOLS_API_KEY = 'API-KEY';

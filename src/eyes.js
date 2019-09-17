@@ -1,7 +1,7 @@
 import initDefaultConfig from './initDefaultConfig';
 const { Logger } = require('@applitools/eyes-common');
 const { makeVisualGridClient } = require('@applitools/visual-grid-client');
-const { getProcessPageAndSerializeScript } = require('@applitools/dom-snapshot');
+const { getProcessPageAndSerialize } = require('@applitools/dom-snapshot');
 
 let _taiko = null;
 let _descEmitter = null;
@@ -43,8 +43,12 @@ class Eyes {
     await this._currentTest.close();
   }
   async _getCDT() {
-    const processPageAndSerializeScript = await getProcessPageAndSerializeScript();
-    const a = await _taiko.evaluate(async () => `(${processPageAndSerializeScript})()`);
+    const processPageAndSerializeScript = await getProcessPageAndSerialize();
+    try {
+      const a = await _taiko.evaluate(`(${processPageAndSerializeScript})()`);
+    } catch (err) {
+      console.log(err);
+    }
     const { cdt, url, resourceUrls, blobs, frames } = await _taiko.evaluate(
       async () => `(${processPageAndSerializeScript})()`,
     );
