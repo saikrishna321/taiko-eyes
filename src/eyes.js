@@ -27,7 +27,7 @@ class Eyes {
 
   async checkWindow() {
     const { cdt, url, resourceUrls, resourceContents, frames } = await this._getCDT();
-    await this._currentTest.checkWindow({
+    this._currentTest.eyes.checkWindow({
       tag: 'first test',
       target: 'region',
       fully: false,
@@ -40,17 +40,15 @@ class Eyes {
   }
 
   async close() {
-    await this._currentTest.close();
+    await this._currentTest.eyes.close();
   }
   async _getCDT() {
     const processPageAndSerializeScript = await getProcessPageAndSerialize();
-    try {
-      const a = await _taiko.evaluate(`(${processPageAndSerializeScript})()`);
-    } catch (err) {
-      console.log(err);
-    }
     const { cdt, url, resourceUrls, blobs, frames } = await _taiko.evaluate(
-      async () => `(${processPageAndSerializeScript})()`,
+      (root, args) => {
+        return eval(args[0]);
+      },
+      { args: [`(${processPageAndSerializeScript})()`] },
     );
     const resourceContents = blobs.map(({ url, type, value }) => ({
       url,
