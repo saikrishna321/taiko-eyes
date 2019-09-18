@@ -2,9 +2,10 @@
   "name": "taiko-eyes",
   "version": "0.0.1",
   "description": "Applitools Eyes SDK for Taiko.js",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
-    "test": "jest && codecov -F flagname unittests"
+    "test": "npm install -g . && jest __tests__/unit/*.*.js && codecov -F flagname unittests",
+    "e2e": "npm install -g . && TAIKO_PLUGIN='taiko-eyes' jest __tests__/integration/*.*.js && codecov -F flagname e2etest"
   },
   "keywords": [
     "applitools",
@@ -33,9 +34,10 @@
   },
   "jest": {
     "coverageDirectory": "./coverage/",
-    "collectCoverage": true
+    "collectCoverage": true,
+    "testEnvironment": "node"
   },
-  "homepage": "https://github.com/saikrishna321/taiko-eyes#readme",
+  "homepage": "https://github.com/saikrishna321/taiko-eyes",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.4",
@@ -55,7 +57,7 @@
     "lint-staged": "^9.0.0",
     "prettier": "1.18.2",
     "pretty-quick": "^1.10.0",
-    "taiko": "1.0.0"
+    "taiko": "git://github.com/getgauge/taiko.git"
   },
   "lint-staged": {
     "**/*.{js}": [
