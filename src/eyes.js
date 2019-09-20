@@ -5,7 +5,6 @@ const { getProcessPageAndSerialize } = require('@applitools/dom-snapshot');
 
 let _taiko = null;
 let _descEmitter = null;
-let processPageAndSerialize;
 
 class Eyes {
   constructor({ configPath } = {}) {
@@ -25,17 +24,16 @@ class Eyes {
     this._currentTest = await this._initEyes(args);
   }
 
-  async checkWindow() {
-    const { cdt, url, resourceUrls, resourceContents, frames } = await this._getCDT();
-    this._currentTest.eyes.checkWindow({
-      tag: 'first test',
-      target: 'region',
-      fully: false,
-      url,
-      cdt,
-      resourceUrls,
-      resourceContents,
-      frames,
+  checkWindow(options) {
+    return this._getCDT().then(({ cdt, url, resourceUrls, resourceContents, frames }) => {
+      const defaultCDT = {
+        url,
+        cdt,
+        resourceUrls,
+        resourceContents,
+        frames,
+      };
+      this._currentTest.eyes.checkWindow({ ...defaultCDT, ...options });
     });
   }
 
