@@ -121,28 +121,30 @@ taikoEyes.checkWindow();
   (optional): In case [`target`](#target) is `region`, this should be the actual css or xpath selector to an element, and the screenshot would be the content of that element. For example:
 
     ```js
-    // Using a css selector
+    Using a css selector
     taikoEyes.checkWindow({
       target: 'region',
       selector: {
         type: 'css',
-        selector: '.my-element' // or '//button'
+        selector: '.element-to-locate'
       }
     });
     
-    // Using an xpath selector
+    Using an xpath selector
     taikoEyes.checkWindow({
       target: 'region',
       selector: {
         type: 'xpath',
-        selector: '//button[1]'
+        selector: '//button'
       }
     });
     
-    // The shorthand string version defaults to css selectors
+    The shorthand string version defaults to css selectors
     taikoEyes.checkWindow({
       target: 'region',
-      selector: '.my-element'
+      tag: 'Step1',
+      sizeMode: 'selector',
+      selector: '.action-element',
     });
     ```
 
