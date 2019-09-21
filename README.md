@@ -94,6 +94,129 @@ Generate a screenshot of the current page and add it to the Applitools Test.
 taikoEyes.checkWindow();
 ```
 
+##### Arguments to `taikoEyes.checkWindow`
+
+* ##### `tag` 
+  (optional): A logical name for this check.
+
+* ##### `target`
+  (optional): Possible values are:
+  <br/> 1. `window` 
+    This is the default value. If set then the captured image is of the entire page or the viewport, use [`fully`](#fully) for specifying what `window` mode to use.
+  <br/>2. `region` 
+    If set then the captured image is of the parts of the page, use this parameter with [`region`](#region) or [`selector`](#selector) for specifying the areas to captured.
+
+* ##### `fully`
+  (optional) In case [`target`](#target) is `window`, if `fully` is `true` (default) then the snapshot is of the entire page, if `fully` is `false` then snapshot is of the viewport.
+
+  ```js
+    // Capture viewport only
+    taikoEyes.checkWindow({
+      target: 'window',
+      fully: false,
+    });
+    ```
+
+* ##### `selector`
+  (optional): In case [`target`](#target) is `region`, this should be the actual css or xpath selector to an element, and the screenshot would be the content of that element. For example:
+
+    ```js
+    // Using a css selector
+    taikoEyes.checkWindow({
+      target: 'region',
+      selector: {
+        type: 'css',
+        selector: '.my-element' // or '//button'
+      }
+    });
+    
+    // Using an xpath selector
+    taikoEyes.checkWindow({
+      target: 'region',
+      selector: {
+        type: 'xpath',
+        selector: '//button[1]'
+      }
+    });
+    
+    // The shorthand string version defaults to css selectors
+    taikoEyes.checkWindow({
+      target: 'region',
+      selector: '.my-element'
+    });
+    ```
+
+* ##### `region`
+  (optional): In case [`target`](#target) is `region`, this should be an object describing the region's coordinates for capturing the image. For example:
+
+    ```js
+    taikoEyes.checkWindow({
+      target: 'region',
+      region: {top: 100, left: 0, width: 1000, height: 200}
+    });
+    ```
+
+* ##### `ignore`
+  (optional): A single or an array of regions to ignore when checking for visual differences. For example:
+
+    ```js
+    taikoEyes.checkWindow({
+      ignore: [
+        {top: 100, left: 0, width: 1000, height: 100},
+        {selector: '.some-div-to-ignore'}
+      ]
+    });
+    ```
+
+* ##### `floating`
+  (optional): A single or an array of floating regions to ignore when checking for visual differences. More information about floating regions can be found in Applitools docs [here](https://help.applitools.com/hc/en-us/articles/360006915292-Testing-of-floating-UI-elements). For example:
+
+    ```js
+    taikoEyes.checkWindow({
+      floating: [
+        {top: 100, left: 0, width: 1000, height: 100, maxUpOffset: 20, maxDownOffset: 20, maxLeftOffset: 20, maxRightOffset: 20},
+        {selector: '.some-div-to-float', maxUpOffset: 20, maxDownOffset: 20, maxLeftOffset: 20, maxRightOffset: 20}
+      ]
+    });
+    ```
+
+* ##### `layout`
+  (optional): A single or an array of regions to match as [layout level.](https://help.applitools.com/hc/en-us/articles/360007188591-Match-Levels) For example:
+
+    ```js
+    taikoEyes.checkWindow({
+      layout: [
+        {top: 100, left: 0, width: 1000, height: 100},
+        {selector: '.some-div-to-test-as-layout'}
+      ]
+    });
+    ```
+
+* ##### `strict`
+  (optional): A single or an array of regions to match as [strict level.](https://help.applitools.com/hc/en-us/articles/360007188591-Match-Levels) For example:
+
+    ```js
+    taikoEyes.checkWindow({
+      strict: [
+        {top: 100, left: 0, width: 1000, height: 100},
+        {selector: '.some-div-to-test-as-strict'}
+      ]
+    });
+    ```
+
+* ##### `scriptHooks`
+  (optional): A set of scripts to be run by the browser during the rendering. It is intended to be used as a means to alter the page's state and structure at the time of rendering.
+  An object with the following properties:
+    * ##### `beforeCaptureScreenshot`: a script that runs after the page is loaded but before taking the screenshot. For example:
+        
+        ```js
+        taikoEyes.checkWindow({
+          scriptHooks: {
+            beforeCaptureScreenshot: "document.body.style.backgroundColor = 'gold'"
+          }
+        })
+        ```
+
 #### Close
 
 Close the applitools test and check that all screenshots are valid.
