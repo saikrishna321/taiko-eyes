@@ -2,6 +2,9 @@ import initDefaultConfig from './initDefaultConfig';
 const { Logger } = require('@applitools/eyes-common');
 const { makeVisualGridClient } = require('@applitools/visual-grid-client');
 const { getProcessPageAndSerialize } = require('@applitools/dom-snapshot');
+const { presult } = require('@applitools/functional-commons');
+const errorsAndDiffs = require('./errorsAndDiffs');
+const errorDigest = require('./errorDigest');
 
 let _taiko = null;
 let _descEmitter = null;
@@ -38,7 +41,11 @@ class Eyes {
   }
 
   async close() {
-    await this._currentTest.eyes.close();
+    const [results] = await presult(this._currentTest.eyes.close());
+    const { failed, diffs, passed } = await errorsAndDiffs(results);
+    if (failed.length || diffs.length) {
+      throw new Error('Test Failed!!');
+    }
   }
   async _getCDT() {
     const processPageAndSerializeScript = await getProcessPageAndSerialize();
