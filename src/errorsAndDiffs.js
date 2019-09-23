@@ -1,9 +1,10 @@
 'use strict';
 
-function errorsAndDiffs(testResultsArr) {
+function errorAndDiff(testResultsArr) {
   return testResultsArr.reduce(
-    ({ failed, diffs, passed }, testResults) => {
+    ({ failed, diffs }, testResults) => {
       const testResult = JSON.parse(JSON.stringify(testResults._testResults));
+      const steps = testResult.stepsInfo;
       if (testResults instanceof Error) {
         failed.push(testResults);
       }
@@ -14,20 +15,35 @@ function errorsAndDiffs(testResultsArr) {
         } else {
           diffs.push(testResults);
         }
-      } else if (testResult.status === 'Failed') {
-        failed.push(testResults);
-      } else {
-        passed.push(testResults);
       }
-
-      return { failed, diffs, passed };
+      return { failed, diffs };
     },
     {
       failed: [],
       diffs: [],
-      passed: [],
     },
   );
 }
 
-module.exports = errorsAndDiffs;
+function errorPerStep(testResultsArr) {
+  return testResultsArr.reduce(
+    ({ failedStep, passedStep }, testResults) => {
+      const testResult = JSON.parse(JSON.stringify(testResults._testResults));
+      const steps = testResult.stepsInfo;
+      steps.forEach(step => {
+        if (!step.isDifferent) {
+          passedStep.push({ name: step.name });
+        } else {
+          failedStep.push({ name: step.name });
+        }
+      });
+      return { failedStep, passedStep };
+    },
+    {
+      failedStep: [],
+      passedStep: [],
+    },
+  );
+}
+
+module.exports = { errorAndDiff, errorPerStep };

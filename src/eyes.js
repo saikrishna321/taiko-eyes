@@ -3,7 +3,7 @@ const { Logger } = require('@applitools/eyes-common');
 const { makeVisualGridClient } = require('@applitools/visual-grid-client');
 const { getProcessPageAndSerialize } = require('@applitools/dom-snapshot');
 const { presult } = require('@applitools/functional-commons');
-const errorsAndDiffs = require('./errorsAndDiffs');
+const { errorAndDiff, errorPerStep } = require('./errorsAndDiffs');
 const errorDigest = require('./errorDigest');
 
 let _taiko = null;
@@ -45,9 +45,10 @@ class Eyes {
     if (results === undefined) {
       console.log('Eyes Test Passed!!');
     } else {
-      const { failed, diffs, passed } = await errorsAndDiffs(results);
+      const { failed, diffs } = await errorAndDiff(results);
       if (failed.length || diffs.length) {
-        throw new Error(errorDigest({ failed, diffs, passed, logger: console }));
+        const { failedStep, passedStep } = errorPerStep(results);
+        throw new Error(errorDigest({ failed, diffs, failedStep, passedStep }));
       }
     }
   }

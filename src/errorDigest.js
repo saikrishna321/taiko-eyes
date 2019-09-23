@@ -1,22 +1,18 @@
 'use strict';
 const chalk = require('chalk');
 
-function errorDigest({ passed, failed, diffs, logger }) {
-  logger.log('errorDigest: diff errors', diffs);
-  logger.log('errorDigest: test errors', failed);
-
+function errorDigest({ failed, diffs, failedStep, passedStep }) {
   const testLink = diffs.length ? `\n\n${indent(2)}See details at: ${diffs[0]._testResults._url}` : '';
 
   return `Eyes-taiko detected diffs or errors during execution of visual tests:
-${indent(2)}${chalk.green(`Passed - ${passed.length} tests`)}${testResultsToString(passed, true)}
 ${indent(2)}${chalk.red(`Diffs detected - ${diffs.length} tests`)}${testResultsToString(diffs)}
-${indent(2)}${chalk.red(`Errors - ${failed.length} tests`)}${testResultsToString(failed)}${testLink}`;
+${indent(2)}${chalk.red(`Errors - ${failed.length} tests`)}${testResultsToString(failed)}${testLink}
+${indent(2)}${chalk.green(`Passed - ${passedStep.length} steps`)}${testResultsToString(passedStep, true)}
+${indent(2)}${chalk.red(`Failed - ${failedStep.length} steps`)}${testResultsToString(failedStep)}`;
 }
 
 function stringifyTestResults(testResults) {
-  return `${testResults.getName()} [${testResults.getHostDisplaySize()}]${
-    testResults.error ? ` : ${testResults.error}` : ''
-  }`;
+  return `${testResults.name}${testResults.error ? ` : ${testResults.error}` : ''}`;
 }
 
 function stringifyError(error) {
