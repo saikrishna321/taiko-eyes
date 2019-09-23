@@ -42,9 +42,13 @@ class Eyes {
 
   async close() {
     const [results] = await presult(this._currentTest.eyes.close());
-    const { failed, diffs, passed } = await errorsAndDiffs(results);
-    if (failed.length || diffs.length) {
-      throw new Error('Test Failed!!');
+    if (results === undefined) {
+      console.log('Eyes Test Passed!!');
+    } else {
+      const { failed, diffs, passed } = await errorsAndDiffs(results);
+      if (failed.length || diffs.length) {
+        throw new Error(errorDigest({ failed, diffs, passed, logger: console }));
+      }
     }
   }
   async _getCDT() {

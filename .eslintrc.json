@@ -15,8 +15,6 @@
     "allowImportExportEverywhere": true
   },
     "globals": {
-        "cy": true,
-        "Cypress": true,
         "before": true,
         "after": true,
         "describe": true,

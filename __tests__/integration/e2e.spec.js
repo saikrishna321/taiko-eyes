@@ -1,22 +1,27 @@
 const { openBrowser, goto, closeBrowser, eyes } = require('taiko');
 const { taikoEyes } = eyes;
 
-jest.setTimeout(130000);
-
-beforeAll(async () => {
-  await openBrowser({ headless: false });
+beforeEach(async () => {
+  await openBrowser({ headless: true });
 });
 
-afterAll(async () => {
+afterEach(async () => {
   await taikoEyes.close();
   await closeBrowser();
 });
 
-test('Should set item in storage', async () => {
-  await goto('https://gauge.org/');
-  await taikoEyes.open({
-    appName: 'Hello World!',
-    testName: 'My first JavaScript test!',
+describe('When adding numbers', async () => {
+  it('Should return correct result', async () => {
+    await goto('https://example.cypress.io/commands/window');
+    await taikoEyes.open({
+      appName: 'Pass',
+      testName: 'Pass!',
+    });
+    await taikoEyes.checkWindow({
+      tag: 'Step1',
+    });
+    await taikoEyes.checkWindow({
+      tag: 'Step1',
+    });
   });
-  await taikoEyes.checkWindow();
 });
