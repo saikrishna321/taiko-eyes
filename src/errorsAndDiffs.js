@@ -4,7 +4,6 @@ function errorAndDiff(testResultsArr) {
   return testResultsArr.reduce(
     ({ failed, diffs }, testResults) => {
       const testResult = JSON.parse(JSON.stringify(testResults._testResults));
-      const steps = testResult.stepsInfo;
       if (testResults instanceof Error) {
         failed.push(testResults);
       }

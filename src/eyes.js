@@ -46,9 +46,11 @@ class Eyes {
       console.log('Eyes Test Passed!!');
     } else {
       const { failed, diffs } = await errorAndDiff(results);
-      if (failed.length || diffs.length) {
-        const { failedStep, passedStep } = errorPerStep(results);
-        throw new Error(errorDigest({ failed, diffs, failedStep, passedStep }));
+      if (this._defaultConfig.failTaikoOnDiff) {
+        if (failed.length || diffs.length) {
+          const { failedStep, passedStep } = errorPerStep(results);
+          throw new Error(errorDigest({ failed, diffs, failedStep, passedStep }));
+        }
       }
     }
   }
