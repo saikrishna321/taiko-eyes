@@ -25,9 +25,16 @@ class Eyes {
   async open(args) {
     this._logger.log('open fn called by user!');
     this._currentTest = await this._initEyes(args);
+    if (this._shouldSkip('open')) {
+      this._currentTest = null;
+      return true;
+    }
   }
 
   checkWindow(options) {
+    if (this._shouldSkip('checkwindow')) {
+      return true;
+    }
     return this._getCDT().then(({ cdt, url, resourceUrls, resourceContents, frames }) => {
       const defaultCDT = {
         url,
@@ -41,6 +48,9 @@ class Eyes {
   }
 
   async close() {
+    if (this._shouldSkip('close')) {
+      return true;
+    }
     const [results] = await presult(this._currentTest.eyes.close());
     if (results === undefined) {
       console.log('Eyes Test Passed!!');
@@ -80,10 +90,6 @@ class Eyes {
       },
     });
 
-    if (this._defaultConfig.eyesIsDisabled && args.isDisabled === false) {
-      throw new Error(`Eyes is globaly disabled (via APPLITOOLS_IS_DISABLED or with applitools.config.js)`);
-    }
-
     if (testInfo.isDisabled) {
       return testInfo;
     }
@@ -104,6 +110,13 @@ class Eyes {
       closePromise: null,
       ...info,
     };
+  }
+
+  _shouldSkip(methodName) {
+    if (this._defaultConfig.isDisabled || args.isDisabled || process.env.APPLITOOLS_IS_DISABLED) {
+      this._logger.log(`eyes is disabled, skipping ${methodName}().`);
+      return true;
+    }
   }
 
   _setTaiko(taiko, descEmitter) {
