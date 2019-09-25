@@ -25,6 +25,7 @@ class Eyes {
   async open(args) {
     this._logger.log('open fn called by user!');
     this._currentTest = await this._initEyes(args);
+    console.log(this._currentTest);
     if (this._shouldSkip('open')) {
       this._currentTest = null;
       return true;
@@ -113,7 +114,7 @@ class Eyes {
   }
 
   _shouldSkip(methodName) {
-    if (this._defaultConfig.isDisabled || args.isDisabled || process.env.APPLITOOLS_IS_DISABLED) {
+    if (this._defaultConfig.isDisabled || this._currentTest.config.isDisabled || process.env.APPLITOOLS_IS_DISABLED) {
       this._logger.log(`eyes is disabled, skipping ${methodName}().`);
       return true;
     }
