@@ -13,9 +13,6 @@
              "--colors",
              "--exit"
          ],
-         "runtimeArgs": [
-             "--nolazy"
-         ],
          "sourceMaps": true,
         "env": {
           "TAIKO_PLUGIN": "taiko-eyes",
