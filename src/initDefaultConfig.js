@@ -2,7 +2,6 @@
 
 const { ConfigUtils } = require('@applitools/eyes-common');
 const { configParams: visualGridConfigParams } = require('@applitools/visual-grid-client');
-const { TypeUtils } = require('@applitools/eyes-common');
 
 function initDefaultConfig(configPath = undefined) {
   const taikoConfigParams = ['tapDirPath', 'failTaikoOnDiff'];

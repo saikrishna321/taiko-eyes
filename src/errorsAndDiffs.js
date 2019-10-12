@@ -1,48 +1,33 @@
 'use strict';
 
 function errorAndDiff(testResultsArr) {
-  return testResultsArr.reduce(
-    ({ failed, diffs }, testResults) => {
-      const testResult = JSON.parse(JSON.stringify(testResults._testResults));
-      if (testResults instanceof Error) {
-        failed.push(testResults);
-      }
-      if (testResult.status === 'Unresolved') {
-        if (testResult.isNew) {
-          console.info(`${testResult.name}. Please approve the new baseline at ${testResult.url}`);
-          failed.push(testResults);
-        } else {
-          diffs.push(testResults);
-        }
-      }
-      return { failed, diffs };
-    },
-    {
-      failed: [],
-      diffs: [],
-    },
-  );
+  let failed = [];
+  let diffs = [];
+  const testResult = JSON.parse(JSON.stringify(testResultsArr));
+  if (testResult.status === 'Unresolved') {
+    if (testResult.isNew) {
+      console.info(`${testResult.name}. Please approve the new baseline at ${testResult.url}`);
+      failed.push(testResult);
+    } else {
+      diffs.push(testResult);
+    }
+  }
+  return { failed, diffs };
 }
 
 function errorPerStep(testResultsArr) {
-  return testResultsArr.reduce(
-    ({ failedStep, passedStep }, testResults) => {
-      const testResult = JSON.parse(JSON.stringify(testResults._testResults));
-      const steps = testResult.stepsInfo;
-      steps.forEach(step => {
-        if (!step.isDifferent) {
-          passedStep.push({ name: step.name });
-        } else {
-          failedStep.push({ name: step.name });
-        }
-      });
-      return { failedStep, passedStep };
-    },
-    {
-      failedStep: [],
-      passedStep: [],
-    },
-  );
+  let failedStep = [];
+  let passedStep = [];
+  const testResult = JSON.parse(JSON.stringify(testResultsArr));
+  const steps = testResult.stepsInfo;
+  steps.forEach(step => {
+    if (!step.isDifferent) {
+      passedStep.push({ name: step.name });
+    } else {
+      failedStep.push({ name: step.name });
+    }
+  });
+  return { failedStep, passedStep };
 }
 
 module.exports = { errorAndDiff, errorPerStep };

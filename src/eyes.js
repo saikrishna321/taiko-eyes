@@ -1,10 +1,11 @@
 import initDefaultConfig from './initDefaultConfig';
+import { ConsoleLogHandler } from '@applitools/eyes-sdk-core';
 const { Logger } = require('@applitools/eyes-common');
 const { makeVisualGridClient } = require('@applitools/visual-grid-client');
 const { getProcessPageAndSerialize } = require('@applitools/dom-snapshot');
-const { presult } = require('@applitools/functional-commons');
 const { errorAndDiff, errorPerStep } = require('./errorsAndDiffs');
 const errorDigest = require('./errorDigest');
+const _ = require('lodash');
 
 let _taiko = null;
 let _descEmitter = null;
@@ -20,6 +21,7 @@ class Eyes {
       ...this._defaultConfig,
     });
     this._currentTest = null;
+    this._closedTests = [];
   }
 
   async open(args) {
@@ -52,18 +54,32 @@ class Eyes {
     if (this._shouldSkip('close')) {
       return true;
     }
-    const [results] = await presult(this._currentTest.eyes.close());
-    if (results === undefined) {
-      console.log('Eyes Test Passed!!');
-    } else {
-      const { failed, diffs } = await errorAndDiff(results);
-      if (this._defaultConfig.failTaikoOnDiff) {
-        if (failed.length || diffs.length) {
-          const { failedStep, passedStep } = errorPerStep(results);
-          throw new Error(errorDigest({ failed, diffs, failedStep, passedStep }));
+    const closePromise = this._currentTest.eyes.close(false);
+    this._currentTest.closePromise = closePromise;
+    this._closedTests.push(this._currentTest);
+    this._currentTest = null;
+  }
+
+  async waitForResults() {
+    let results = await Promise.all(this._closedTests.map(b => b.closePromise));
+    _.flatten(results).forEach(async result => {
+      if (result._status === 'Passed') {
+        console.info('Eyes Test Passed!!');
+      } else {
+        if (this._defaultConfig.failTaikoOnDiff) {
+          const { failed, diffs } = await errorAndDiff(result);
+          if (failed.length || diffs.length) {
+            const { failedStep, passedStep } = errorPerStep(result);
+            console.info(errorDigest({ failed, diffs, failedStep, passedStep }));
+          }
         }
       }
-    }
+    });
+    if (this._containsFailure(results)) throw new Error('Eyes Validation Failed!!');
+  }
+
+  _containsFailure(testsResults) {
+    return testsResults.some(testResult => testResult.some(r => r.getStatus() !== 'Passed'));
   }
   async _getCDT() {
     const processPageAndSerializeScript = await getProcessPageAndSerialize();
