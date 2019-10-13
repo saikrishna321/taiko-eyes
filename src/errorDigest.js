@@ -2,7 +2,7 @@
 const chalk = require('chalk');
 
 function errorDigest({ failed, diffs, failedStep, passedStep }) {
-  const testLink = diffs.length ? `\n\n${indent(2)}See details at: ${diffs[0]._testResults._url}` : '';
+  const testLink = diffs.length ? `\n\n${indent(2)}See details at: ${diffs[0].url}` : '';
 
   return `Eyes-taiko detected diffs or errors during execution of visual tests:
 ${indent(2)}${chalk.red(`Diffs detected - ${diffs.length} tests`)}${testResultsToString(diffs)}
