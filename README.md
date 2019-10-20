@@ -54,17 +54,21 @@ const { taikoEyes } = eyes;
 
 jest.setTimeout(130000);
 
-before(async () => {	
-  await openBrowser();
+beforeEach(async () => {
+  await openBrowser({ headless: true });
   await taikoEyes.open({
     appName: 'Taiko Eyes!',
     testName: 'Taiko Visual Test!',
   });
 });
 
-after(async () => {
+afterEach(async () => {
   await taikoEyes.close();
   await closeBrowser();
+});
+
+after(async () => {
+  await taikoEyes.waitForResults();
 });
 
 test('Should set item in storage', async () => {

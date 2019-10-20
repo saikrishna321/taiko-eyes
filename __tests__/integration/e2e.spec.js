@@ -10,6 +10,10 @@ afterEach(async () => {
   await closeBrowser();
 });
 
+after(async () => {
+  await taikoEyes.waitForResults();
+});
+
 describe('When adding numbers', async () => {
   it('Should return correct result', async () => {
     await goto('https://example.cypress.io/commands/window');
