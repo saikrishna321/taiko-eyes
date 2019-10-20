@@ -100,6 +100,15 @@ Generate a screenshot of the current page and add it to the Applitools Test.
 taikoEyes.checkWindow();
 ```
 
+### **waitForResults**
+Wait until all tests in the suite are completed and return their results.
+Note that if you don't wait for the tests to be completed then in case of a visual test failure, eyes cannot fail the test.
+* it is recommended to wait for the results in the `afterAll()` hook. 
+
+```js
+await taikoEyes.waitForResults()
+```
+
 ##### Arguments to `taikoEyes.checkWindow`
 
 * ##### `tag` 
