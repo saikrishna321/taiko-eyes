@@ -3,7 +3,9 @@
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": ["error"],
-    "jsx-a11y/rule-name": 0
+    "no-underscore-dangle": 0, // todo: tobe fixed
+    "class-methods-use-this": 0, // todo: tobe fixed
+    "no-eval": 0 // todo: tobe fixed
   },
   "env": {
     "node": true,
