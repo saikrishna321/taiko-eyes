@@ -1,11 +1,12 @@
-import Eyes from './eyes';
 import path from 'path';
+import Eyes from './eyes';
+
 const configPath = path.resolve(__dirname, '../fixtures/applitools.config.js');
 
 const ID = 'eyes';
-let taikoEyes = new Eyes({ configPath });
+const taikoEyes = new Eyes({ configPath });
 
-let init = async (taiko, descEmitter) => {
+const init = async (taiko, descEmitter) => {
   taikoEyes._setTaiko(taiko, descEmitter);
 };
 

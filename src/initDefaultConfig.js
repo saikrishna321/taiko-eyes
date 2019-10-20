@@ -1,5 +1,3 @@
-'use strict';
-
 const { ConfigUtils } = require('@applitools/eyes-common');
 const { configParams: visualGridConfigParams } = require('@applitools/visual-grid-client');
 
