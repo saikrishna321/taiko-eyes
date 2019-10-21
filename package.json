@@ -1,6 +1,6 @@
 {
   "name": "taiko-eyes",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Applitools Eyes SDK for Taiko.js",
   "main": "./src/index.js",
   "scripts": {
