@@ -1,8 +1,6 @@
-'use strict';
-
-function errorAndDiff(testResultsArr) {
-  let failed = [];
-  let diffs = [];
+export function errorAndDiff(testResultsArr) {
+  const failed = [];
+  const diffs = [];
   const testResult = JSON.parse(JSON.stringify(testResultsArr));
   if (testResult.status === 'Unresolved') {
     if (testResult.isNew) {
@@ -15,9 +13,9 @@ function errorAndDiff(testResultsArr) {
   return { failed, diffs };
 }
 
-function errorPerStep(testResultsArr) {
-  let failedStep = [];
-  let passedStep = [];
+export function errorPerStep(testResultsArr) {
+  const failedStep = [];
+  const passedStep = [];
   const testResult = JSON.parse(JSON.stringify(testResultsArr));
   const steps = testResult.stepsInfo;
   steps.forEach(step => {
@@ -29,5 +27,3 @@ function errorPerStep(testResultsArr) {
   });
   return { failedStep, passedStep };
 }
-
-module.exports = { errorAndDiff, errorPerStep };

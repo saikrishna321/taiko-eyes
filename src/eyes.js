@@ -1,16 +1,18 @@
+// import { ConsoleLogHandler } from '@applitools/eyes-sdk-core';
 import initDefaultConfig from './initDefaultConfig';
-import { ConsoleLogHandler } from '@applitools/eyes-sdk-core';
+
 const { Logger } = require('@applitools/eyes-common');
 const { makeVisualGridClient } = require('@applitools/visual-grid-client');
 const { getProcessPageAndSerialize } = require('@applitools/dom-snapshot');
+const _ = require('lodash');
 const { errorAndDiff, errorPerStep } = require('./errorsAndDiffs');
 const errorDigest = require('./errorDigest');
-const _ = require('lodash');
-
-let _taiko = null;
-let _descEmitter = null;
 
 class Eyes {
+  _taiko = null;
+
+  _descEmitter = null;
+
   constructor({ configPath } = {}) {
     this._defaultConfig = initDefaultConfig(configPath);
     this._logger = new Logger(this._defaultConfig.showLogs, 'eyes');
@@ -25,13 +27,13 @@ class Eyes {
   }
 
   async open(args) {
+    if (this._shouldSkip('open')) {
+      return true;
+    }
     this._logger.log('open fn called by user!');
     this._currentTest = await this._initEyes(args);
     console.log(this._currentTest);
-    if (this._shouldSkip('open')) {
-      this._currentTest = null;
-      return true;
-    }
+    return true;
   }
 
   checkWindow(options) {
@@ -58,20 +60,19 @@ class Eyes {
     this._currentTest.closePromise = closePromise;
     this._closedTests.push(this._currentTest);
     this._currentTest = null;
+    return true;
   }
 
   async waitForResults() {
-    let results = await Promise.all(this._closedTests.map(b => b.closePromise));
+    const results = await Promise.all(this._closedTests.map(b => b.closePromise));
     _.flatten(results).forEach(async result => {
       if (result._status === 'Passed') {
         console.info('Eyes Test Passed!!');
-      } else {
-        if (this._defaultConfig.failTaikoOnDiff) {
-          const { failed, diffs } = await errorAndDiff(result);
-          if (failed.length || diffs.length) {
-            const { failedStep, passedStep } = errorPerStep(result);
-            console.info(errorDigest({ failed, diffs, failedStep, passedStep }));
-          }
+      } else if (this._defaultConfig.failTaikoOnDiff) {
+        const { failed, diffs } = await errorAndDiff(result);
+        if (failed.length || diffs.length) {
+          const { failedStep, passedStep } = errorPerStep(result);
+          console.info(errorDigest({ failed, diffs, failedStep, passedStep }));
         }
       }
     });
@@ -81,16 +82,17 @@ class Eyes {
   _containsFailure(testsResults) {
     return testsResults.some(testResult => testResult.some(r => r.getStatus() !== 'Passed'));
   }
+
   async _getCDT() {
     const processPageAndSerializeScript = await getProcessPageAndSerialize();
-    const { cdt, url, resourceUrls, blobs, frames } = await _taiko.evaluate(
+    const { cdt, url, resourceUrls, blobs, frames } = await this._taiko.evaluate(
       (root, args) => {
         return eval(args[0]);
       },
       { args: [`(${processPageAndSerializeScript})()`] },
     );
-    const resourceContents = blobs.map(({ url, type, value }) => ({
-      url,
+    const resourceContents = blobs.map(({ resourceContentsUrl, type, value }) => ({
+      url: resourceContentsUrl,
       type,
       value: Buffer.from(value, 'base64'),
     }));
@@ -134,11 +136,12 @@ class Eyes {
       this._logger.log(`eyes is disabled, skipping ${methodName}().`);
       return true;
     }
+    return false;
   }
 
   _setTaiko(taiko, descEmitter) {
-    _taiko = taiko;
-    _descEmitter = descEmitter;
+    this._taiko = taiko;
+    this._descEmitter = descEmitter;
   }
 }
 
