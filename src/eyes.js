@@ -27,11 +27,11 @@ class Eyes {
   }
 
   async open(args) {
+    this._currentTest = await this._initEyes(args);
     if (this._shouldSkip('open')) {
       return true;
     }
     this._logger.log('open fn called by user!');
-    this._currentTest = await this._initEyes(args);
     console.log(this._currentTest);
     return true;
   }
@@ -91,8 +91,8 @@ class Eyes {
       },
       { args: [`(${processPageAndSerializeScript})()`] },
     );
-    const resourceContents = blobs.map(({ resourceContentsUrl, type, value }) => ({
-      url: resourceContentsUrl,
+    const resourceContents = blobs.map(({ url, type, value }) => ({
+      url,
       type,
       value: Buffer.from(value, 'base64'),
     }));
