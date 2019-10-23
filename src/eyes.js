@@ -1,5 +1,6 @@
 // import { ConsoleLogHandler } from '@applitools/eyes-sdk-core';
 import initDefaultConfig from './initDefaultConfig';
+import { containsTestFailure } from './utils/utils';
 
 const { Logger } = require('@applitools/eyes-common');
 const { makeVisualGridClient } = require('@applitools/visual-grid-client');
@@ -65,6 +66,7 @@ class Eyes {
 
   async waitForResults() {
     const results = await Promise.all(this._closedTests.map(b => b.closePromise));
+
     _.flatten(results).forEach(async result => {
       if (result._status === 'Passed') {
         console.info('Eyes Test Passed!!');
@@ -76,11 +78,7 @@ class Eyes {
         }
       }
     });
-    if (this._containsFailure(results)) throw new Error('Eyes Validation Failed!!');
-  }
-
-  _containsFailure(testsResults) {
-    return testsResults.some(testResult => testResult.some(r => r.getStatus() !== 'Passed'));
+    if (containsTestFailure(results)) throw new Error('Eyes Validation Failed!!');
   }
 
   async _getCDT() {
