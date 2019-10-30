@@ -66,19 +66,14 @@ class Eyes {
 
   async waitForResults() {
     const results = await Promise.all(this._closedTests.map(b => b.closePromise));
-
-    _.flatten(results).forEach(async result => {
-      if (result._status === 'Passed') {
-        console.info('Eyes Test Passed!!');
-      } else if (this._defaultConfig.failTaikoOnDiff) {
+    if (this._defaultConfig.failTaikoOnDiff) {
+      _.flatten(results).forEach(async result => {
         const { failed, diffs } = await errorAndDiff(result);
-        if (failed.length || diffs.length) {
-          const { failedStep, passedStep } = errorPerStep(result);
-          console.info(errorDigest({ failed, diffs, failedStep, passedStep }));
-        }
-      }
-    });
-    if (containsTestFailure(results)) throw new Error('Eyes Validation Failed!!');
+        const { failedStep, passedStep } = errorPerStep(result);
+        console.info(errorDigest({ failed, diffs, failedStep, passedStep }));
+      });
+      if (containsTestFailure(results)) throw new Error('Eyes Validation Failed!!');
+    }
   }
 
   async _getCDT() {
