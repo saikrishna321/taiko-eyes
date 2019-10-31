@@ -4,8 +4,8 @@
   "description": "Applitools Eyes SDK for Taiko.js",
   "main": "./src/index.js",
   "scripts": {
-    "test": "npm install -g . && jest __tests__/unit/*.*.js && codecov -F flagname unittests",
-    "e2e": "npm install -g . && TAIKO_PLUGIN='taiko-eyes' mocha --recursive --require @babel/register --timeout=99999 __tests__/integration/*.*.js --exit"
+    "test": "jest __tests__/unit/*.*.js && codecov -F flagname unittests",
+    "e2e": "TAIKO_PLUGIN='taiko-eyes' mocha --recursive --require @babel/register --timeout=99999 __tests__/integration/*.*.js --exit"
   },
   "keywords": [
     "applitools",
